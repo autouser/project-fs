@@ -1,0 +1,51 @@
+.row
+  .span4
+
+    = render partial: 'projects/directories'
+
+  .span4
+    .navbar
+      .navbar-inner
+        = link_to @directory.name, project_directory_path(@project, @directory), class: 'brand'
+    .well.well-small#uploads_dashboard
+      = form_for :document, :html => {:multipart => true} do |f|
+        = f.hidden_field :file_cache
+        = f.file_field :file, multiple: true, id: 'files', name: "document[file]"
+        =# f.submit "Upload"
+        = link_to 'Cancel', project_directory_path(@project, @directory), class: 'btn'
+  .span4
+    .navbar
+      .navbar-inner
+        = link_to 'Notifications', '', class: 'brand'
+
+    #notifications
+
+:javascript
+  $('#files').bind('fileuploadprogress', function (e, data) {
+    var file = data.files[0]
+    var filename = escape( file.name )
+    var panel
+    var panels = $('div[data-fn="'+filename+'"]')
+    if (panels.length == 0) {
+      var panel = $("<div class='alert' data-fn='"+filename+"'><button class='close' data-dismiss='alert'>&times;</button><strong>"+file.name+"</strong><div class='progress progress-striped'><div class='bar'></bar></div></div>")
+      $('#notifications').prepend(panel)
+    } else {
+      var panel = panels[0]
+    }
+    var progress = parseInt(data.loaded / data.total * 100, 10);
+    if (progress > 100) {
+      progress = 100
+    }
+    window.data = data
+    $('div[data-fn="'+filename+'"] .bar').css('width', progress+'%')
+  })
+  $('#files').bind('fileuploaddone', function (e, data) {
+    var file = data.files[0]
+    var filename = escape( file.name )
+    $('div[data-fn="'+filename+'"]').addClass('alert-success')
+  })
+  $('#files').bind('fileuploadfail', function (e, data) {
+    var file = data.files[0]
+    var filename = escape( file.name )
+    $('div[data-fn="'+filename+'"]').addClass('alert-error')
+  })

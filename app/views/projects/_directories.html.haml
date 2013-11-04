@@ -1,0 +1,20 @@
+.navbar
+  .navbar-inner
+    = link_to 'Directories', project_path(@project), class: 'brand'
+    %ul.nav.pull-right
+      %li= link_to 'Add', new_project_directory_path(@project)
+
+
+%table.treetable.table.table-bordered.table-condensed.table-hover#tree
+  %tbody
+    - Directory.sort_by_ancestry(@project.directories.to_a).each do |dir|
+
+      - unless dir.new_record?
+        %tr{data: {tt: {id: "#{dir.id}", parent: {id: "#{dir.parent_id}"}  }}}
+          %td
+            %span.folder
+              = link_to dir.name, project_directory_path(@project, dir)
+          
+
+:javascript
+  $("#tree").treetable({ clickableNodeNames: true });

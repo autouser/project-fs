@@ -1,0 +1,32 @@
+.row
+  .span4
+
+    = render partial: 'projects/directories'
+
+  .span8
+    .navbar
+      .navbar-inner
+        = link_to @directory.name, project_directory_path(@project, @directory), class: 'brand'
+        %ul.nav.pull-right
+          %li= link_to "Upload", files_project_directory_path(@project, @directory)
+          %li= link_to "Edit", edit_project_directory_path(@project, @directory)
+          %li= link_to "Add Subdirectory", new_project_directory_path(@project, parent_id: @directory.id)
+          %li= link_to "Delete", project_directory_path(@project, @directory), method: :delete, confirm: 'Are you sure?'
+
+    - if @directory.documents.where(status: 'published').any?
+      %table.table.table-condensed.table-bordered.table-hover.table-striped
+        %thead
+          %tr
+            %th Filename
+            %th Size
+            %th{width: 100}
+        %tbody
+          - @directory.documents.where(status: 'published').each do |document|
+            %tr
+              %td= link_to document.file.file.filename, project_directory_document_path(@project, @directory, document)
+              %td
+                = document.file.file.size
+                b
+              %td
+                = link_to 'delete', project_directory_document_path(@project, @directory, document), method: :delete, confirm: 'Are you sure?'
+      

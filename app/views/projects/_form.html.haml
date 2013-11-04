@@ -1,0 +1,5 @@
+= simple_form_for @project do |f|
+  = f.input :name
+  = f.input :description, as: :text, input_html: {rows: 5}
+  = f.button :submit
+  = link_to 'Cancel', projects_path, class: 'btn'

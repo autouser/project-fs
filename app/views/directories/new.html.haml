@@ -1,0 +1,13 @@
+.row
+  .span4
+
+    = render partial: 'projects/directories'
+
+  .span8
+    .navbar
+      .navbar-inner
+        = link_to 'New Directory', project_directories_path(@project), class: 'brand'
+    .well.well-small
+      
+      = render partial: 'form'
+      
